@@ -1,11 +1,16 @@
 import React from 'react';
+import { useContext } from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/UserContext';
+
 const credential = {
     email: '',
     password: ''
 }
 const Login = () => {
+    const navigate = useNavigate()
+    const { signIn } = useContext(AuthContext)
     const [state, setState] = useState(credential)
 
     const handleInput = e => {
@@ -28,13 +33,29 @@ const Login = () => {
         getsData = { ...getsData, [name]: value }
         console.log(getsData);
         */
-
         // setState({ ...state, [name]: value })
+
+        /*
+        // No need to remember state name
+            setState(s => {
+            return { ...s, [name]: value }
+            })
+
+            setState(s => {
+            return ({ ...s, [name]: value })
+            })
+        */
+
         setState(s => ({ ...s, [name]: value }))
     }
     const handleLogin = e => {
         e.preventDefault();
-        console.log(state);
+        const { email, password } = state
+        signIn(email, password)
+            .then(result => {
+                navigate('/')
+            })
+            .catch(e => console.error(e))
     }
     return (
         <div>
