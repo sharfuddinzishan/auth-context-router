@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/UserContext';
 
 const credential = {
@@ -9,6 +9,8 @@ const credential = {
 }
 const Registration = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/'
     const { createUser, googleSignIn } = useContext(AuthContext)
     const [state, setState] = useState(credential)
 
@@ -18,14 +20,14 @@ const Registration = () => {
         createUser(email, password)
             .then(result => {
                 e.target.reset()
-                navigate('/')
+                navigate(from, { replace: true })
             })
             .catch(e => console.error(e))
     }
     const handleGoogleSignIn = e => {
         googleSignIn()
             .then(result => {
-                navigate('/')
+                navigate(from, { replace: true })
             })
             .catch(e => console.error(e))
     }

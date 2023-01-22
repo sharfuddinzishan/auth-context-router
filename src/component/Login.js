@@ -1,7 +1,7 @@
 import React from 'react';
 import { useContext } from 'react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/UserContext';
 
 const credential = {
@@ -10,9 +10,10 @@ const credential = {
 }
 const Login = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/'
     const { signIn } = useContext(AuthContext)
     const [state, setState] = useState(credential)
-
     const handleInput = e => {
         /*  e.target is an object type */
         const { name, value } = e.target
@@ -53,7 +54,7 @@ const Login = () => {
         const { email, password } = state
         signIn(email, password)
             .then(result => {
-                navigate('/')
+                navigate(from, { replace: true })
             })
             .catch(e => console.error(e))
     }
